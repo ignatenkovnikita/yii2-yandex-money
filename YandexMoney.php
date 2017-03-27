@@ -28,22 +28,6 @@ class YandexMoney extends  \yii\base\Component
         $settings->request_source = 'php://input';
 
         $this->settings = $settings;
-
-        /*$this->settings = [
-            'SHOP_ID' => $fileSettings['SHOP_ID'],
-            'SC_ID' => $fileSettings['SC_ID'],
-            'SHOP_PASSWORD' => $fileSettings['SHOP_PASSWORD'],
-            'CURRENCY' => $fileSettings['CURRENCY'],
-            'AGENT_ID' => $fileSettings['AGENT_ID'],
-            'SECURITY_TYPE' => $fileSettings['SECURITY_TYPE'],
-
-            'mws_cert' => $this->shopPath . '/mws/shop.cer',
-            'mws_private_key' => $this->shopPath . '/mws/private.key',
-            'mws_cert_password'  => $fileSettings['MWS_CERT_PASSWORD'],
-
-            'request_source' => 'php://input',
-            //'LOG_FILE' => dirname(__FILE__) . '/log.txt',
-        ];*/
     }
 
     public function parseSettingsFile()
@@ -67,13 +51,8 @@ class YandexMoney extends  \yii\base\Component
 
     public function listOrders()
     {
-        $mws = new mws\MWS($this->settings);
-        $result = $mws->listOrders(777);
-
-        $paymentResult = $mws->confirmPayment(777, 9999);
-
-        $result2 = $mws->listOrders(777);
-
-        var_dump(simplexml_load_string($result), $paymentResult, simplexml_load_string($result2));
+        //$mws = new mws\MWS($this->settings);
+        //$result = $mws->listOrders(777);
+        //$paymentResult = $mws->confirmPayment(777, 9999);
     }
 }
