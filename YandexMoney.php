@@ -2,6 +2,8 @@
 
 namespace ignatenkovnikita\yandexmoney;
 
+use Yii;
+
 class YandexMoney extends  \yii\base\Component
 {
     public $shopPath;
@@ -76,5 +78,18 @@ class YandexMoney extends  \yii\base\Component
         }
 
         return $result;
+    }
+
+    public function paymentAviso($request)
+    {
+        $yaMoneyCommonHttpProtocol = new YaMoneyCommonHttpProtocol('paymentAviso', $this->settings);
+        $yaMoneyCommonHttpProtocol->processRequest($request);
+    }
+
+    public function checkMD5($request)
+    {
+        $yaMoneyCommonHttpProtocol = new YaMoneyCommonHttpProtocol('paymentAviso', $this->settings);
+
+        return $yaMoneyCommonHttpProtocol->checkMD5($request);
     }
 }
