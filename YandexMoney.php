@@ -49,10 +49,32 @@ class YandexMoney extends  \yii\base\Component
         return [];
     }
 
-    public function listOrders()
+    public function listOrders($orderNumber = null, $format = 'XML')
     {
-        //$mws = new mws\MWS($this->settings);
-        //$result = $mws->listOrders(777);
-        //$paymentResult = $mws->confirmPayment(777, 9999);
+        $mws = new mws\MWS($this->settings);
+        $ordersInfo = $mws->listOrders($orderNumber, $format);
+        $result = false;
+
+        switch ($format) {
+            case 'XML':
+                try {
+                    $ordersInfo = new \SimpleXMLElement($ordersInfo);
+                    $error = (int) $ordersInfo->attributes()->error;
+                    $status = (int) $ordersInfo->attributes()->status;
+                    $orders = [];
+
+                    if ($error === 0 && $status === 0) {
+                        foreach ($ordersInfo->children() as $orderInfo) {
+                            $orderInfo = (array) $orderInfo->attributes();
+                            $orders[] = $orderInfo['@attributes'];
+                        }
+
+                        $result = $orderNumber != null ? $orders[0] : $orders;
+                    }
+                } catch (\Exception $e) {}
+                break;
+        }
+
+        return $result;
     }
 }
