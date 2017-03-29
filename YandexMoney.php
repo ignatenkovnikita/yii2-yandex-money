@@ -92,4 +92,27 @@ class YandexMoney extends  \yii\base\Component
 
         return $yaMoneyCommonHttpProtocol->checkMD5($request);
     }
+
+    public function payOrder($invoiceId, $destination, $cardSynonym, $amount, $format = 'XML')
+    {
+        $mws = new mws\MWS($this->settings);
+        $confirmDepositionResult = $mws->confirmDeposition($invoiceId, $destination, $cardSynonym, (int) $amount, $format);
+        $result = false;
+
+        switch ($format) {
+            case 'XML':
+                try {
+                    $confirmDepositionResult = new \SimpleXMLElement($confirmDepositionResult);
+                    $status = (int) $confirmDepositionResult->attributes()->status;
+                    $error = (string) $confirmDepositionResult->attributes()->error;
+
+                    if ($status === 0) {
+                        $result = true;
+                    }
+                } catch (\Exception $e) {}
+                break;
+        }
+
+        return $result;
+    }
 }
