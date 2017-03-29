@@ -20,6 +20,7 @@ class MWS {
 
     /**
      * Returns successful orders and their properties.
+     * @param  string|int $orderNumber
      * @return string response from Yandex.Money in XML format
      */
     public function listOrders($orderNumber = null, $format = 'XML') {
@@ -107,6 +108,32 @@ class MWS {
         );
         $result = $this->sendUrlEncodedRequest($methodName, $requestParams);
         $this->log->info($result);
+        return $result;
+    }
+
+    /**
+     * Автоплатеж
+     * @param  string|int $invoiceId transaction number of the transfer being confirmed
+     * @param  string     $amount  amount to transfer
+     * @return string              response from Yandex.Money in XML format
+     */
+    public function confirmDeposition($invoiceId, $destination, $cardSynonym, $amount) {
+        $methodName = 'confirmDeposition';
+        $dateTime = Utils::formatDate(new \DateTime());
+
+        $requestParams = array(
+            'clientOrderId' => time(),
+            'requestDT' => $dateTime,
+            'invoiceId' => $invoiceId,
+            'destination' => $destination,
+            'cardSynonym' => $cardSynonym,
+            'amount' => $amount,
+            'currency' => 'RUB',
+            'offerAccepted' => true,
+        );
+
+        $result = $this->sendUrlEncodedRequest($methodName, $requestParams);
+
         return $result;
     }
 
