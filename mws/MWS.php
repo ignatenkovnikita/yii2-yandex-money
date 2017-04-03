@@ -114,6 +114,8 @@ class MWS {
     /**
      * Автоплатеж
      * @param  string|int $invoiceId transaction number of the transfer being confirmed
+     * @param  string     $destination Номер кошелька или идентифицированного счета, полученный при привязке карты Исполнителя.
+     * @param  string     $cardSynonym cardSynonym	xs:string	Синоним карты, полученный при привязке карты Исполнителя.
      * @param  string     $amount  amount to transfer
      * @return string              response from Yandex.Money in XML format
      */
@@ -150,6 +152,7 @@ class MWS {
             'requestDT' => $dateTime,
             'orderId' => $orderId
         );
+
         $result = $this->sendUrlEncodedRequest($methodName, $requestParams);
         $this->log->info($result);
         return $result;
@@ -166,7 +169,7 @@ class MWS {
         $methodName = "repeatCardPayment";
         $this->log->info("Start " . $methodName);
         $requestParams = array(
-            'clientOrderId' => mktime(),
+            'clientOrderId' => time(),
             'invoiceId' => $invoiceId,
             'amount' => $amount
         );

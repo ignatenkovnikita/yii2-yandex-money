@@ -93,25 +93,62 @@ class YandexMoney extends  \yii\base\Component
         return $yaMoneyCommonHttpProtocol->checkMD5($request);
     }
 
-    public function payOrder($invoiceId, $destination, $cardSynonym, $amount, $format = 'XML')
+    public function payOrder($invoiceId, $destination, $cardSynonym, $amount)
     {
         $mws = new mws\MWS($this->settings);
-        $confirmDepositionResult = $mws->confirmDeposition($invoiceId, $destination, $cardSynonym, (int) $amount, $format);
+        $confirmDepositionResult = $mws->confirmDeposition($invoiceId, $destination, $cardSynonym, (int) $amount);
         $result = false;
 
-        switch ($format) {
-            case 'XML':
-                try {
-                    $confirmDepositionResult = new \SimpleXMLElement($confirmDepositionResult);
-                    $status = (int) $confirmDepositionResult->attributes()->status;
-                    $error = (string) $confirmDepositionResult->attributes()->error;
+        try {
+            $confirmDepositionResult = new \SimpleXMLElement($confirmDepositionResult);
 
-                    if ($status === 0) {
-                        $result = true;
-                    }
-                } catch (\Exception $e) {}
-                break;
-        }
+            $status = (int) $confirmDepositionResult->attributes()->status;
+            $error = (string) $confirmDepositionResult->attributes()->error;
+
+            if ($status == 1) {
+                $result = true;
+            }
+        } catch (\Exception $e) {}
+
+        return $result;
+    }
+
+    public function repeatOrderPayment($invoiceId, $amount)
+    {
+        $mws = new mws\MWS($this->settings);
+        $repeatCardPaymentResult = $mws->repeatCardPayment($invoiceId, (int) $amount);
+        $result = false;
+
+        try {
+            $repeatCardPaymentResult = new \SimpleXMLElement($repeatCardPaymentResult);
+
+            $status = (int) $repeatCardPaymentResult->attributes()->status;
+            $error = (string) $repeatCardPaymentResult->attributes()->error;
+
+            if ($status === 0) {
+                $result = true;
+            }
+        } catch (\Exception $e) {}
+
+        return $result;
+    }
+
+    public function cancelOrder($orderId)
+    {
+        $mws = new mws\MWS($this->settings);
+        $cancelPaymentResult = $mws->cancelPayment($orderId);
+        $result = false;
+
+        try {
+            $cancelPaymentResult = new \SimpleXMLElement($cancelPaymentResult);
+
+            $status = (int) $cancelPaymentResult->attributes()->status;
+            $error = (string) $cancelPaymentResult->attributes()->error;
+
+            if ($status === 0) {
+                $result = true;
+            }
+        } catch (\Exception $e) {}
 
         return $result;
     }
