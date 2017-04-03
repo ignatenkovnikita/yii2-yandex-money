@@ -102,8 +102,6 @@ class YandexMoney extends  \yii\base\Component
         try {
             $confirmDepositionResult = new \SimpleXMLElement($confirmDepositionResult);
 
-            var_dump($confirmDepositionResult);
-
             $status = (int) $confirmDepositionResult->attributes()->status;
             $error = (string) $confirmDepositionResult->attributes()->error;
 
