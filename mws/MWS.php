@@ -165,13 +165,14 @@ class MWS {
      * @param  string $amount        amount to make the payment
      * @return string                response from Yandex.Money in XML format
      */
-    public function repeatCardPayment($invoiceId, $amount) {
+    public function repeatCardPayment($invoiceId, $amount, $orderNumber) {
         $methodName = "repeatCardPayment";
         $this->log->info("Start " . $methodName);
         $requestParams = array(
             'clientOrderId' => time(),
             'invoiceId' => $invoiceId,
-            'amount' => $amount
+            'amount' => $amount,
+            'orderNumber' => $orderNumber,
         );
         $result = $this->sendUrlEncodedRequest($methodName, $requestParams);
         $this->log->info($result);

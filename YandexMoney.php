@@ -101,7 +101,7 @@ class YandexMoney extends  \yii\base\Component
 
         try {
             $confirmDepositionResult = new \SimpleXMLElement($confirmDepositionResult);
-
+            
             $status = (int) $confirmDepositionResult->attributes()->status;
             $error = (string) $confirmDepositionResult->attributes()->error;
 
@@ -113,10 +113,10 @@ class YandexMoney extends  \yii\base\Component
         return $result;
     }
 
-    public function repeatOrderPayment($invoiceId, $amount)
+    public function repeatOrderPayment($invoiceId, $amount, $orderNumber)
     {
         $mws = new mws\MWS($this->settings);
-        $repeatCardPaymentResult = $mws->repeatCardPayment($invoiceId, (int) $amount);
+        $repeatCardPaymentResult = $mws->repeatCardPayment($invoiceId, (int) $amount, $orderNumber);
         $result = false;
 
         try {
