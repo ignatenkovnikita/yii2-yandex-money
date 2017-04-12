@@ -101,10 +101,10 @@ class YandexMoney extends  \yii\base\Component
 
         try {
             $confirmDepositionResult = new \SimpleXMLElement($confirmDepositionResult);
-            
+
             $status = (int) $confirmDepositionResult->attributes()->status;
             $error = (string) $confirmDepositionResult->attributes()->error;
-
+          
             if ($status == 1) {
                 $result = true;
             }
