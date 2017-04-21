@@ -133,17 +133,37 @@ class YandexMoney extends  \yii\base\Component
         return $result;
     }
 
-    public function cancelOrder($orderId)
+    public function cancelOrder($invoiceId)
     {
         $mws = new mws\MWS($this->settings);
-        $cancelPaymentResult = $mws->cancelPayment($orderId);
+        $mwsResult = $mws->cancelPayment($invoiceId);
         $result = false;
 
         try {
-            $cancelPaymentResult = new \SimpleXMLElement($cancelPaymentResult);
+            $mwsResult = new \SimpleXMLElement($mwsResult);
 
-            $status = (int) $cancelPaymentResult->attributes()->status;
-            $error = (string) $cancelPaymentResult->attributes()->error;
+            $status = (int) $mwsResult->attributes()->status;
+            $error = (string) $mwsResult->attributes()->error;
+
+            if ($status === 0) {
+                $result = true;
+            }
+        } catch (\Exception $e) {}
+
+        return $result;
+    }
+
+    public function returnOrder($invoiceId, $amount)
+    {
+        $mws = new mws\MWS($this->settings);
+        $mwsResult = $mws->returnPayment($invoiceId, $amount);
+        $result = false;
+
+        try {
+            $mwsResult = new \SimpleXMLElement($mwsResult);
+
+            $status = (int) $mwsResult->attributes()->status;
+            $error = (string) $mwsResult->attributes()->error;
 
             if ($status === 0) {
                 $result = true;
