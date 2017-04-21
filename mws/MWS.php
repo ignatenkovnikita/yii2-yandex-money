@@ -76,7 +76,7 @@ class MWS {
         $this->log->info("Start " . $methodName);
         $dateTime = Utils::formatDate(new \DateTime()) ;
         $requestParams = array(
-            'clientOrderId' => mktime(),
+            'clientOrderId' => time(),
             'requestDT' => $dateTime,
             'invoiceId' => $invoiceId,
             'shopId' => $this->settings->SHOP_ID,
